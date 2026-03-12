@@ -4,22 +4,92 @@ Utilities created for solving picoCTF challenges such as PW Crack 2 where encode
 
 ---
 
-# Project Structure
+## PW Crack 2
 
-```
-picoCTF_PWCracker2_Scripts/
-├─ README.md
-├─ python/
-│  ├─ hex_to_ascii_plain.py
-│  └─ hex_to_ascii_0x.py
-└─ bash/
-   ├─ hex_to_ascii_plain.sh
-   └─ hex_to_ascii_0x.sh
-```
+### Description
+
+Can you crack the password to get the flag?
+Download the password checker and the encrypted flag file. Both files must be placed in the same directory.
+
+The goal of this challenge is to analyze the password checker script, understand how the password is constructed, and recover the correct password to decrypt the flag.
 
 ---
 
-# File: README.md
+## Solution Strategy
+
+1. **Analyze the Provided Script**
+
+   The first step is to inspect the password checker script provided in the challenge.
+   Read the code carefully to understand how the password is validated.
+
+   ```bash
+   cat level2.py
+   ```
+
+2. **Understand the Password Construction**
+
+   While analyzing the script, observe how the password is generated.
+   In this challenge, the password is constructed using Python `chr()` functions with hexadecimal values.
+
+   Example pattern:
+
+   ```python
+   chr(0x33) + chr(0x39) + chr(0x63) + chr(0x65)
+   ```
+
+3. **Convert Hexadecimal Values to ASCII**
+
+   Each `chr()` value represents an ASCII character.
+   Converting them reveals the actual password string.
+
+   Example:
+
+   ```
+   0x33 → 3
+   0x39 → 9
+   0x63 → c
+   0x65 → e
+   ```
+
+   Result:
+
+   ```
+   39ce
+   ```
+
+4. **Automate the Conversion**
+
+   To simplify decoding, helper scripts were created in this repository to convert:
+
+   * Plain hex → ASCII
+   * `0x` formatted hex → ASCII
+
+   These scripts allow quick decoding during CTF analysis.
+
+5. **Use the Correct Password**
+
+   After reconstructing the password, run the password checker with the recovered value.
+   If the password is correct, the script will decrypt the encrypted flag.
+
+### Files
+
+```
+level2.py
+level2.flag.txt.enc
+```
+
+### Tools Used
+
+* Python
+* Bash
+* Hex to ASCII conversion utilities
+* Basic script analysis
+
+### Debug / Notes
+
+During analysis, encoded values inside the script may need to be converted from hexadecimal to ASCII. The helper scripts in this repository can be used to quickly decode those values.
+
+---
 
 ## Hex to ASCII Converter
 
@@ -92,7 +162,7 @@ echo "0x48 0x65 0x6c 0x6c 0x6f" | sed 's/0x//g' | tr -d ' ' | xxd -r -p
 
 ## License
 
-MIT License
+MIT License - see [LICENSE](LICENSE) file for details.
 
 ---
 
